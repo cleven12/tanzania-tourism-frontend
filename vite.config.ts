@@ -18,6 +18,7 @@ export default defineConfig({
 			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 			adapter: adapter({
 				images: {
+					domains: [],
 					sizes: [320, 640, 960, 1280, 1920],
 					formats: ['image/avif', 'image/webp'],
 					minimumCacheTTL: 86400,
