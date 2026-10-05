@@ -9,7 +9,14 @@
 
 	let { data } = $props();
 	const tour = $derived(data.tour);
-	const gallery = $derived((tour.gallery ?? []) as { url: string; alternativeText?: string; width?: number; height?: number }[]);
+	const gallery = $derived(
+		(tour.gallery ?? []) as {
+			url: string;
+			alternativeText?: string;
+			width?: number;
+			height?: number;
+		}[]
+	);
 	let lightboxIndex = $state<number | null>(null);
 </script>
 
@@ -23,12 +30,21 @@
 
 <section class="relative isolate bg-neutral-900 text-white">
 	{#if tour.coverImage}
-		<Img src={tour.coverImage} alt={tour.coverImage.alternativeText ?? tour.title} class="absolute inset-0 -z-10 h-full w-full object-cover opacity-50" priority sizes="100vw" />
+		<Img
+			src={tour.coverImage}
+			alt={tour.coverImage.alternativeText ?? tour.title}
+			class="absolute inset-0 -z-10 h-full w-full object-cover opacity-50"
+			priority
+			sizes="100vw"
+		/>
 	{/if}
 	<div class="mx-auto max-w-6xl px-4 py-20">
-		<p class="text-sm uppercase tracking-wide text-white/80">
-			{#if tour.destination}<a href="/destinations/{tour.destination.slug}" class="hover:underline">{tour.destination.name}</a>{/if}
-			{#if tour.category} · {tour.category.name}{/if}
+		<p class="text-sm tracking-wide text-white/80 uppercase">
+			{#if tour.destination}<a href="/destinations/{tour.destination.slug}" class="hover:underline"
+					>{tour.destination.name}</a
+				>{/if}
+			{#if tour.category}
+				· {tour.category.name}{/if}
 		</p>
 		<h1 class="mt-2 text-4xl font-bold sm:text-5xl">{tour.title}</h1>
 		{#if tour.summary}<p class="mt-3 max-w-2xl text-lg text-white/85">{tour.summary}</p>{/if}
@@ -38,10 +54,21 @@
 <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 lg:grid-cols-[1fr_340px]">
 	<div class="min-w-0 space-y-12">
 		<dl class="flex flex-wrap gap-x-8 gap-y-3 rounded-lg border p-4 text-sm">
-			{#if tour.durationDays}<div><dt class="text-neutral-500">Duration</dt><dd class="font-medium">{tour.durationDays} days</dd></div>{/if}
-			{#if tour.difficulty}<div><dt class="text-neutral-500">Difficulty</dt><dd class="font-medium capitalize">{tour.difficulty}</dd></div>{/if}
+			{#if tour.durationDays}<div>
+					<dt class="text-neutral-500">Duration</dt>
+					<dd class="font-medium">{tour.durationDays} days</dd>
+				</div>{/if}
+			{#if tour.difficulty}<div>
+					<dt class="text-neutral-500">Difficulty</dt>
+					<dd class="font-medium capitalize">{tour.difficulty}</dd>
+				</div>{/if}
 			{#if tour.groupSizeMin || tour.groupSizeMax}
-				<div><dt class="text-neutral-500">Group size</dt><dd class="font-medium">{tour.groupSizeMin ?? 1}{tour.groupSizeMax ? `–${tour.groupSizeMax}` : '+'}</dd></div>
+				<div>
+					<dt class="text-neutral-500">Group size</dt>
+					<dd class="font-medium">
+						{tour.groupSizeMin ?? 1}{tour.groupSizeMax ? `–${tour.groupSizeMax}` : '+'}
+					</dd>
+				</div>
 			{/if}
 		</dl>
 
@@ -56,7 +83,7 @@
 			<section>
 				<h2 class="text-2xl font-semibold">Highlights</h2>
 				<ul class="mt-4 list-disc space-y-1 pl-5">
-					{#each tour.highlights as h}<li>{h.text}</li>{/each}
+					{#each tour.highlights as h, hi (hi)}<li>{h.text}</li>{/each}
 				</ul>
 			</section>
 		{/if}
@@ -70,7 +97,9 @@
 							<Accordion.Trigger>Day {day.dayNumber}: {day.title}</Accordion.Trigger>
 							<Accordion.Content>
 								{#if day.description}<p class="whitespace-pre-line">{day.description}</p>{/if}
-								{#if day.accommodation}<p class="mt-2 text-sm text-neutral-600">Stay: {day.accommodation}</p>{/if}
+								{#if day.accommodation}<p class="mt-2 text-sm text-neutral-600">
+										Stay: {day.accommodation}
+									</p>{/if}
 							</Accordion.Content>
 						</Accordion.Item>
 					{/each}
@@ -84,7 +113,9 @@
 					<div>
 						<h2 class="text-2xl font-semibold">Included</h2>
 						<ul class="mt-4 space-y-1">
-							{#each tour.inclusions as i}<li class="flex gap-2"><span class="text-green-600" aria-hidden="true">✓</span>{i.text}</li>{/each}
+							{#each tour.inclusions as i, n (n)}<li class="flex gap-2">
+									<span class="text-green-600" aria-hidden="true">✓</span>{i.text}
+								</li>{/each}
 						</ul>
 					</div>
 				{/if}
@@ -92,7 +123,9 @@
 					<div>
 						<h2 class="text-2xl font-semibold">Not included</h2>
 						<ul class="mt-4 space-y-1">
-							{#each tour.exclusions as i}<li class="flex gap-2"><span class="text-red-600" aria-hidden="true">✕</span>{i.text}</li>{/each}
+							{#each tour.exclusions as i, n (n)}<li class="flex gap-2">
+									<span class="text-red-600" aria-hidden="true">✕</span>{i.text}
+								</li>{/each}
 						</ul>
 					</div>
 				{/if}
@@ -104,8 +137,18 @@
 				<h2 class="mb-4 text-2xl font-semibold">Gallery</h2>
 				<div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
 					{#each gallery as img, i (img.url)}
-						<button type="button" class="aspect-[4/3] overflow-hidden rounded-md" onclick={() => (lightboxIndex = i)} aria-label="Open photo {i + 1}">
-							<Img src={img} alt={img.alternativeText ?? `${tour.title} photo ${i + 1}`} class="h-full w-full object-cover" sizes="(min-width: 640px) 33vw, 50vw" />
+						<button
+							type="button"
+							class="aspect-[4/3] overflow-hidden rounded-md"
+							onclick={() => (lightboxIndex = i)}
+							aria-label="Open photo {i + 1}"
+						>
+							<Img
+								src={img}
+								alt={img.alternativeText ?? `${tour.title} photo ${i + 1}`}
+								class="h-full w-full object-cover"
+								sizes="(min-width: 640px) 33vw, 50vw"
+							/>
 						</button>
 					{/each}
 				</div>
@@ -117,7 +160,7 @@
 			<section>
 				<h2 class="text-2xl font-semibold">FAQ</h2>
 				<Accordion.Root type="single" class="mt-4">
-					{#each tour.faqs as faq, i}
+					{#each tour.faqs as faq, i (i)}
 						<Accordion.Item value="faq-{i}">
 							<Accordion.Trigger>{faq.question}</Accordion.Trigger>
 							<Accordion.Content><p class="whitespace-pre-line">{faq.answer}</p></Accordion.Content>
@@ -133,11 +176,19 @@
 			{#if tour.priceFrom}
 				<p class="text-sm text-neutral-500">From</p>
 				<p class="text-3xl font-bold">
-					{new Intl.NumberFormat('en-US', { style: 'currency', currency: tour.currency || 'USD', maximumFractionDigits: 0 }).format(tour.priceFrom)}
+					{new Intl.NumberFormat('en-US', {
+						style: 'currency',
+						currency: tour.currency || 'USD',
+						maximumFractionDigits: 0
+					}).format(tour.priceFrom)}
 					<span class="text-sm font-normal text-neutral-500">per person</span>
 				</p>
 			{/if}
-			<a href="#enquire" class="mt-4 block rounded-md bg-neutral-900 py-2 text-center font-medium text-white">Enquire now</a>
+			<a
+				href="#enquire"
+				class="mt-4 block rounded-md bg-neutral-900 py-2 text-center font-medium text-white"
+				>Enquire now</a
+			>
 		</div>
 	</aside>
 </div>

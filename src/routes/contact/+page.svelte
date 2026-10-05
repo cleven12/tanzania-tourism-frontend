@@ -3,7 +3,7 @@
 	import EnquiryForm from '$lib/components/EnquiryForm.svelte';
 	import SectionHeading from '$lib/components/SectionHeading.svelte';
 	let { data } = $props();
-	const site = $derived(data.site as any);
+	const site = $derived(data.site as Record<string, string | undefined> | null);
 	const email = $derived(site?.contactEmail ?? site?.email);
 	const phone = $derived(site?.contactPhone ?? site?.phone);
 	const whatsapp = $derived(site?.whatsapp ?? site?.whatsappNumber);
@@ -19,7 +19,14 @@
 			{#if phone}<li>Phone: <a class="underline" href="tel:{phone}">{phone}</a></li>{/if}
 			{#if site?.address}<li>{site.address}</li>{/if}
 			{#if waDigits}
-				<li><a class="inline-block rounded-md bg-green-600 px-4 py-2 text-white" href="https://wa.me/{waDigits}" rel="noopener" target="_blank">Chat on WhatsApp</a></li>
+				<li>
+					<a
+						class="inline-block rounded-md bg-green-600 px-4 py-2 text-white"
+						href="https://wa.me/{waDigits}"
+						rel="noopener"
+						target="_blank">Chat on WhatsApp</a
+					>
+				</li>
 			{/if}
 		</ul>
 	</div>

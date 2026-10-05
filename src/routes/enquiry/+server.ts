@@ -37,8 +37,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
 		return '/contact';
 	})();
 
-	const success = () =>
-		wantsJson ? json({ ok: true }) : redirect(303, `${back}?sent=1#enquiry`);
+	const success = () => (wantsJson ? json({ ok: true }) : redirect(303, `${back}?sent=1#enquiry`));
 
 	// Honeypot: pretend success.
 	if (str(raw.website, 200)) return success();

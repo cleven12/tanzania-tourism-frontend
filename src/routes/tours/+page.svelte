@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { SvelteURLSearchParams } from 'svelte/reactivity';
 	import Seo from '$lib/components/Seo.svelte';
 	import TourCard from '$lib/components/TourCard.svelte';
 	import SectionHeading from '$lib/components/SectionHeading.svelte';
@@ -8,8 +9,14 @@
 	const pagination = $derived(data.result.meta?.pagination);
 
 	function href(over: Record<string, string | number | undefined>) {
-		const p = new URLSearchParams();
-		const merged = { category: f.category, destination: f.destination, q: f.q, page: undefined, ...over };
+		const p = new SvelteURLSearchParams();
+		const merged = {
+			category: f.category,
+			destination: f.destination,
+			q: f.q,
+			page: undefined,
+			...over
+		};
 		for (const [k, v] of Object.entries(merged)) if (v) p.set(k, String(v));
 		const s = p.toString();
 		return s ? `/tours?${s}` : '/tours';
@@ -42,14 +49,21 @@
 			<span class="text-sm font-medium">Category:</span>
 			<a href={href({ category: undefined })} class="{chip} {!f.category ? active : ''}">All</a>
 			{#each data.categories as c (c.slug)}
-				<a href={href({ category: c.slug })} class="{chip} {f.category === c.slug ? active : ''}">{c.name}</a>
+				<a href={href({ category: c.slug })} class="{chip} {f.category === c.slug ? active : ''}"
+					>{c.name}</a
+				>
 			{/each}
 		</div>
 		<div class="flex flex-wrap items-center gap-2">
 			<span class="text-sm font-medium">Destination:</span>
-			<a href={href({ destination: undefined })} class="{chip} {!f.destination ? active : ''}">All</a>
+			<a href={href({ destination: undefined })} class="{chip} {!f.destination ? active : ''}"
+				>All</a
+			>
 			{#each data.destinations as d (d.slug)}
-				<a href={href({ destination: d.slug })} class="{chip} {f.destination === d.slug ? active : ''}">{d.name}</a>
+				<a
+					href={href({ destination: d.slug })}
+					class="{chip} {f.destination === d.slug ? active : ''}">{d.name}</a
+				>
 			{/each}
 		</div>
 	</div>
@@ -61,14 +75,22 @@
 			{/each}
 		</div>
 	{:else}
-		<p class="mt-12 text-center text-neutral-600">No tours match your filters. <a class="underline" href="/tours">Clear filters</a></p>
+		<p class="mt-12 text-center text-neutral-600">
+			No tours match your filters. <a class="underline" href="/tours">Clear filters</a>
+		</p>
 	{/if}
 
 	{#if pagination && pagination.pageCount > 1}
 		<nav class="mt-10 flex items-center justify-center gap-4" aria-label="Pagination">
-			{#if pagination.page > 1}<a class={chip} href={href({ page: pagination.page - 1 })} rel="prev">Previous</a>{/if}
+			{#if pagination.page > 1}<a class={chip} href={href({ page: pagination.page - 1 })} rel="prev"
+					>Previous</a
+				>{/if}
 			<span class="text-sm">Page {pagination.page} of {pagination.pageCount}</span>
-			{#if pagination.page < pagination.pageCount}<a class={chip} href={href({ page: pagination.page + 1 })} rel="next">Next</a>{/if}
+			{#if pagination.page < pagination.pageCount}<a
+					class={chip}
+					href={href({ page: pagination.page + 1 })}
+					rel="next">Next</a
+				>{/if}
 		</nav>
 	{/if}
 </div>

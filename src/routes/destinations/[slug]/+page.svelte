@@ -22,10 +22,16 @@
 
 <section class="relative isolate bg-neutral-900 text-white">
 	{#if d.coverImage}
-		<Img src={d.coverImage} alt={d.coverImage.alternativeText ?? d.name} class="absolute inset-0 -z-10 h-full w-full object-cover opacity-50" priority sizes="100vw" />
+		<Img
+			src={d.coverImage}
+			alt={d.coverImage.alternativeText ?? d.name}
+			class="absolute inset-0 -z-10 h-full w-full object-cover opacity-50"
+			priority
+			sizes="100vw"
+		/>
 	{/if}
 	<div class="mx-auto max-w-6xl px-4 py-20">
-		{#if d.region}<p class="text-sm uppercase tracking-wide text-white/80">{d.region}</p>{/if}
+		{#if d.region}<p class="text-sm tracking-wide text-white/80 uppercase">{d.region}</p>{/if}
 		<h1 class="mt-2 text-4xl font-bold sm:text-5xl">{d.name}</h1>
 		{#if d.summary}<p class="mt-3 max-w-2xl text-lg text-white/85">{d.summary}</p>{/if}
 	</div>
@@ -40,7 +46,13 @@
 	{/if}
 
 	{#if geo.latitude != null && geo.longitude != null}
-		<Map markers={[{ lat: geo.latitude, lng: geo.longitude, label: d.name }]} center={[geo.latitude, geo.longitude]} zoom={9} class="h-80 w-full rounded-lg" label={d.name} />
+		<Map
+			markers={[{ lat: geo.latitude, lng: geo.longitude, label: d.name }]}
+			center={[geo.latitude, geo.longitude]}
+			zoom={9}
+			class="h-80 w-full rounded-lg"
+			label={d.name}
+		/>
 	{/if}
 
 	{#if d.tours?.length}
