@@ -8,7 +8,7 @@ const fallback: SiteSetting = {
 	contactEmail: 'clevengodsontech@gmail.com'
 } as SiteSetting;
 
-export const load: LayoutServerLoad = async ({ setHeaders }) => {
+export const load: LayoutServerLoad = async () => {
 	let site: SiteSetting = fallback;
 	try {
 		const s = await getSiteSettings();
@@ -16,6 +16,5 @@ export const load: LayoutServerLoad = async ({ setHeaders }) => {
 	} catch (e) {
 		console.error('getSiteSettings failed, using fallback', e);
 	}
-	setHeaders({ 'cache-control': 'public, max-age=0, s-maxage=300, stale-while-revalidate=600' });
 	return { site, apiBase: apiBase() };
 };
