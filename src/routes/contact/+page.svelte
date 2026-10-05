@@ -3,10 +3,10 @@
 	import EnquiryForm from '$lib/components/EnquiryForm.svelte';
 	import SectionHeading from '$lib/components/SectionHeading.svelte';
 	let { data } = $props();
-	const site = $derived(data.site as Record<string, string | undefined> | null);
-	const email = $derived(site?.contactEmail ?? site?.email);
-	const phone = $derived(site?.contactPhone ?? site?.phone);
-	const whatsapp = $derived(site?.whatsapp ?? site?.whatsappNumber);
+	const site = $derived(data.site);
+	const email = $derived(site?.contactEmail);
+	const phone = $derived(site?.contactPhone);
+	const whatsapp = $derived(site?.whatsapp);
 	const waDigits = $derived(whatsapp ? String(whatsapp).replace(/\D/g, '') : '');
 </script>
 
