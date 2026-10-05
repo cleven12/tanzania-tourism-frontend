@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	type MediaLike = {
 		url: string;
 		alternativeText?: string | null;
@@ -26,8 +27,12 @@
 
 	const WIDTHS = [320, 640, 960, 1280, 1920];
 
-	// Media urls should already be absolute (server mediaUrl()); relative ones are used as-is.
-	const abs = (u: string) => u;
+	const abs = (u: string) => {
+		if (/^(https?:)?\/\//.test(u) || u.startsWith('data:')) return u;
+		if (u.startsWith('/') && !u.startsWith('/uploads')) return u; // local static asset
+		const base = ((page.data as { apiBase?: string }).apiBase ?? '').replace(/\/$/, '');
+		return base + (u.startsWith('/') ? u : '/' + u);
+	};
 
 	const raw = $derived(src ? abs(typeof src === 'string' ? src : src.url) : '/hero-fallback.svg');
 	const isLocal = $derived(raw.startsWith('/') && !raw.startsWith('//'));

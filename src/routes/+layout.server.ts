@@ -1,4 +1,4 @@
-import { getSiteSettings } from '$lib/server/api';
+import { getSiteSettings, apiBase } from '$lib/server/api';
 import type { SiteSetting } from '$lib/types';
 import type { LayoutServerLoad } from './$types';
 
@@ -17,5 +17,5 @@ export const load: LayoutServerLoad = async ({ setHeaders }) => {
 		console.error('getSiteSettings failed, using fallback', e);
 	}
 	setHeaders({ 'cache-control': 'public, max-age=0, s-maxage=300, stale-while-revalidate=600' });
-	return { site };
+	return { site, apiBase: apiBase() };
 };
